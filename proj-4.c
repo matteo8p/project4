@@ -31,13 +31,15 @@ int main()
 
         if(id > 0)                              //Readers are positive 
         {
-            startThread(reader, id); 
+            printf("Start Reader");
+            //startThread(reader, id); 
         }else                                   //Writers are negative 
         {
-            startThread(writer, id); 
+            printf("Start writer"); 
+            //startThread(writer, id); 
         }
     }
-    run();                                      //Init threads 
+    //run();                                      //Init threads 
     return 0; 
 }
 
