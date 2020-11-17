@@ -5,9 +5,11 @@
 void reader(); 
 void writer(); 
 
-struct semaphore *mutex; 
+// struct semaphore *mutex; 
 struct semaphore *wrt; 
-int rc;
+struct semaphore *rsem; 
+struct semaphore *wsem; 
+int rwc; int wwc; int rc; int wc; 
 
 int R;                                        //Number of readers 
 int W;                                        //Number of writers
@@ -15,13 +17,19 @@ int global_i = 0;                                       //Global variable i
 
 int main()
 {
-    mutex = (struct semaphore *)malloc(sizeof(struct semaphore)); 
+    // mutex = (struct semaphore *)malloc(sizeof(struct semaphore)); 
     wrt = (struct semaphore *)malloc(sizeof(struct semaphore)); 
+    rsem = (struct semaphore *)malloc(sizeof(struct semaphore)); 
+    wsem = (struct semaphore *)malloc(sizeof(struct semaphore)); 
+
     runQ = (struct queue*)malloc(sizeof(struct queue)); 
 
     initSem(mutex, 1); 
     initSem(wrt, 1); 
-    rc = 0;  
+    initSem(rsem, 0); 
+    initSem(wsem, 1); 
+
+    rwc = wwc = rc = wc = 0; 
 
     scanf("%d,%d",&R,&W);                       //Scan for number of readers and writers 
 
@@ -46,27 +54,25 @@ int main()
 
 void reader(int id)
 {
-    P(mutex); 
-    rc++; 
-    if(rc == 1)
+    if(wwc > 0 || wc > 0)
     {
-        P(wrt); 
+        rwc++; 
+        P(rsem);
+        rwc--; 
     }
-    V(mutex); 
+    rc++; 
 
     printf("\n This is the %d th reader reading value i = %d for the first time \n", id, global_i); 
     yield(runQ); 
     printf("\n This is the %d th reader reading value i = %d for the second time \n", id, global_i); 
 
-    P(mutex); 
     rc--; 
-    if(rc == 0)
-    {
-        V(wrt); 
-    }
-    V(mutex); 
-    
 
+    if(rc == 0 && wwc > 0)
+    {
+        V(wsem); 
+    }
+    
     TCB_t *tcb = delQueue(runQ); 
     if(runQ->headPointer == NULL) exit(0); 
     swapcontext(&(tcb->context), &(runQ->headPointer->context)); 
@@ -74,15 +80,25 @@ void reader(int id)
 
 void writer(int id)
 {
-    P(wrt);
-
+    if(rc > 0 || wc > 0)
+    {
+        wwc++; 
+        P(wsem); 
+        wwc--; 
+    }
+    wc++; 
     id = -id;                                                                //Convert negative id to positive id
 
     printf("\n This is the %d th writer writing value i = %d \n", id, id);
     global_i = id; 
     printf("\n This is the %d th writer verifying value i = %d \n", id, global_i); 
 
-    V(wrt); 
+    wc--; 
+
+    if(rwc > 0)
+    {
+        V(rsem); 
+    }
 
     TCB_t *tcb = delQueue(runQ); 
     if(runQ->headPointer == NULL) exit(0); 
