@@ -53,16 +53,10 @@ void reader(int id)
         P(wrt); 
     }
     V(mutex); 
-    for(int i = 0; i < 2; i++)
-    {
-            if(i == 0)                              //Read first time 
-            {
-                printf("\n This is the %d th reader reading value i = %d for the first time \n", id, global_i); 
-            }else                                   //Read second time 
-            {
-                printf("\n This is the %d th reader reading value i = %d for the second time \n", id, global_i); 
-            }
-    }
+
+    printf("\n This is the %d th reader reading value i = %d for the first time \n", id, global_i); 
+    yield(runQ); 
+    printf("\n This is the %d th reader reading value i = %d for the second time \n", id, global_i); 
 
     P(mutex); 
     rc--; 
@@ -71,6 +65,7 @@ void reader(int id)
         V(wrt); 
     }
     V(mutex); 
+    
 
     TCB_t *tcb = delQueue(runQ); 
     if(runQ->headPointer == NULL) exit(0); 
