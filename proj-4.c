@@ -71,11 +71,11 @@ void reader(int id)
             V(wrt); 
         }
         V(mutex); 
+        
+        TCB_t *tcb = delQueue(runQ); 
+        if(runQ->headPointer == NULL) exit(0); 
+        swapcontext(&(tcb->context), &(runQ->headPointer->context)); 
     }
-    
-    TCB_t *tcb = delQueue(runQ); 
-    if(runQ->headPointer == NULL) exit(0); 
-    swapcontext(&(tcb->context), &(runQ->headPointer->context)); 
 }
 
 void writer(int id)
