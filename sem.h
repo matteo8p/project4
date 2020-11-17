@@ -6,7 +6,7 @@ typedef struct semaphore {
 } semaphore;
 
 void initSem(semaphore*, int);
-void P(semaphore*, int id);
+void P(semaphore*);
 void V(semaphore*);
 
 void initSem(semaphore *sem, int value) {
@@ -15,19 +15,12 @@ void initSem(semaphore *sem, int value) {
 	sem->value = value;
 }
 
-void P(semaphore *sem, int id) 
+void P(semaphore *sem) 
 {
 	while(1)
 	{
 		if(sem->value == 0)
 		{
-			if(id > 0)
-			{
-				printf("\n Producer %d is waiting \n", id);
-			}else
-			{
-				printf("\n Consumer %d is waiting \n", -id);
-			}
 			struct TCB_t *tcb = delQueue(runQ);
 			addQueue(sem->semQ, tcb);
 			if(runQ->headPointer == NULL)
