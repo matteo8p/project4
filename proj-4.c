@@ -46,16 +46,15 @@ int main()
 
 void reader(int id)
 {
+    P(mutex); 
+    rc++; 
+    if(rc == 1)
+    {
+        P(wrt); 
+    }
+    V(mutex); 
     for(int i = 0; i < 2; i++)
     {
-        P(mutex); 
-        rc++; 
-        if(rc == 1)
-        {
-            P(wrt); 
-        }
-        V(mutex); 
-
             if(i == 0)                              //Read first time 
             {
                 printf("\n This is the %d th reader reading value i = %d for the first time \n", id, global_i); 
@@ -63,15 +62,16 @@ void reader(int id)
             {
                 printf("\n This is the %d th reader reading value i = %d for the second time \n", id, global_i); 
             }
-
-        P(mutex); 
-        rc--; 
-        if(rc == 0)
-        {
-            V(wrt); 
-        }
-        V(mutex); 
     }
+
+    P(mutex); 
+    rc--; 
+    if(rc == 0)
+    {
+        V(wrt); 
+    }
+    V(mutex); 
+
     TCB_t *tcb = delQueue(runQ); 
     if(runQ->headPointer == NULL) exit(0); 
     swapcontext(&(tcb->context), &(runQ->headPointer->context)); 
