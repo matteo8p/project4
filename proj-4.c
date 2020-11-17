@@ -72,16 +72,26 @@ void reader(int id)
         }
         V(mutex); 
     }
+    
+    TCB_t *tcb = delQueue(runQ); 
+    if(runQ->headPointer == NULL) exit(0); 
+    swapcontext(&(tcb->context), &(runQ->headPointer->context)); 
 }
 
 void writer(int id)
 {
     P(wrt);
 
+    id = -id;                                                                //Convert negative id to positive id
+
     printf("\n This is the %d th writer writing value i = %d \n", id, id);
     global_i = id; 
     printf("\n This is the %d th writer verifying value i = %d \n", id, global_i); 
 
     V(wrt); 
+
+    TCB_t *tcb = delQueue(runQ); 
+    if(runQ->headPointer == NULL) exit(0); 
+    swapcontext(&(tcb->context), &(runQ->headPointer->context)); 
 }
 
