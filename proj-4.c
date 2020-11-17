@@ -72,9 +72,9 @@ void reader(int id)
         }
         V(mutex); 
     }
-        TCB_t *tcb = delQueue(runQ); 
-        if(runQ->headPointer == NULL) exit(0); 
-        swapcontext(&(tcb->context), &(runQ->headPointer->context)); 
+    TCB_t *tcb = delQueue(runQ); 
+    if(runQ->headPointer == NULL) exit(0); 
+    swapcontext(&(tcb->context), &(runQ->headPointer->context)); 
 }
 
 void writer(int id)
@@ -88,5 +88,9 @@ void writer(int id)
     printf("\n This is the %d th writer verifying value i = %d \n", id, global_i); 
 
     V(wrt); 
+
+    TCB_t *tcb = delQueue(runQ); 
+    if(runQ->headPointer == NULL) exit(0); 
+    swapcontext(&(tcb->context), &(runQ->headPointer->context)); 
 }
 
