@@ -69,15 +69,15 @@ void reader(int id)
             printf("\n This is the %d th reader reading value i = %d for the first time \n", id, global_i); 
         }else
         {
-        printf("\n This is the %d th reader reading value i = %d for the second time \n", id, global_i); 
+            printf("\n This is the %d th reader reading value i = %d for the second time \n", id, global_i); 
         }
-    
-        rc--; 
 
+        rc--;
         if(rc == 0 && wwc > 0)
         {
             V(wsem); 
         }
+        yield();
     }
 
     TCB_t *tcb = delQueue(runQ); 
@@ -106,6 +106,7 @@ void writer(int id)
     {
         V(rsem); 
     }
+    yield();
 
     TCB_t *tcb = delQueue(runQ); 
     if(runQ->headPointer == NULL) exit(0); 
