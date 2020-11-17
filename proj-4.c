@@ -56,14 +56,12 @@ void reader(int id)
         }
         V(mutex); 
 
-        //Read the gloabl variable i 
-
             if(i == 0)                              //Read first time 
             {
-                printf("\n This is the %dth reader reading value i = %d for the first time", id, global_i); 
+                printf("\n This is the %d th reader reading value i = %d for the first time \n", id, global_i); 
             }else                                   //Read second time 
             {
-                printf("\n This is the %dth reader reading value i = %d for the second time", id, global_i); 
+                printf("\n This is the %d th reader reading value i = %d for the second time \n", id, global_i); 
             }
 
         P(mutex); 
