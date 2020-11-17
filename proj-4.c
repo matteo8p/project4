@@ -54,25 +54,32 @@ int main()
 
 void reader(int id)
 {
-    if(wwc > 0 || wc > 0)
+    for(int i = 0; i < 2; i++)
     {
-        rwc++; 
-        P(rsem);
-        rwc--; 
-    }
-    rc++; 
+        if(wwc > 0 || wc > 0)
+        {
+            rwc++; 
+            P(rsem);
+            rwc--; 
+        }
+        rc++; 
 
-    printf("\n This is the %d th reader reading value i = %d for the first time \n", id, global_i); 
-    yield(runQ); 
-    printf("\n This is the %d th reader reading value i = %d for the second time \n", id, global_i); 
-
-    rc--; 
-
-    if(rc == 0 && wwc > 0)
-    {
-        V(wsem); 
-    }
+        if(i == 0)
+        {
+            printf("\n This is the %d th reader reading value i = %d for the first time \n", id, global_i); 
+        }else
+        {
+        printf("\n This is the %d th reader reading value i = %d for the second time \n", id, global_i); 
+        }
     
+        rc--; 
+
+        if(rc == 0 && wwc > 0)
+        {
+            V(wsem); 
+        }
+    }
+
     TCB_t *tcb = delQueue(runQ); 
     if(runQ->headPointer == NULL) exit(0); 
     swapcontext(&(tcb->context), &(runQ->headPointer->context)); 
