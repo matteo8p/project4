@@ -17,6 +17,7 @@ int main()
 {
     mutex = (struct semaphore *)malloc(sizeof(struct semaphore)); 
     wrt = (struct semaphore *)malloc(sizeof(struct semaphore)); 
+    runQ = (struct queue*)malloc(sizeof(struct queue)); 
 
     initSem(mutex, 1); 
     initSem(wrt, 1); 
