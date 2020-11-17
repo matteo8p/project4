@@ -24,7 +24,7 @@ int main()
 
     runQ = (struct queue*)malloc(sizeof(struct queue)); 
 
-    initSem(mutex, 1); 
+    // initSem(mutex, 1); 
     initSem(wrt, 1); 
     initSem(rsem, 0); 
     initSem(wsem, 1); 
