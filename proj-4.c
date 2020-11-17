@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdbool.h>
-#include "threads.h"
 #include "sem.h"
 
 void reader(); 
