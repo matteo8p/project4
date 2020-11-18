@@ -95,7 +95,13 @@ void writer(int id)
 
     if(rwc > 0)
     {
-        V(rsem); 
+        for(int i = 0; i < rwc; i++)
+        {
+            V(rsem); 
+        }
+    }else if(wwc > 0)
+    {
+        V(wsem); 
     }
 
     TCB_t *tcb = delQueue(runQ); 
