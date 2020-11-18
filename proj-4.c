@@ -77,7 +77,7 @@ void reader(int id)
 
 void writer(int id)
 {
-    if(rc > 0 || wc > 0)
+    if(rc > 0 || wc > 0 || rwc > 0 || wwc > 0)
     {
         wwc++; 
         P(wsem); 
@@ -85,8 +85,8 @@ void writer(int id)
     }
     wc++; 
     id = -id;                                                                //Convert negative id to positive id
-    global_i = id; 
-
+    //first write 
+    global_i = id;                  
     printf("\n This is the %d th writer writing value i = %d \n", id, id);
     yield();
     printf("\n This is the %d th writer verifying value i = %d \n", id, global_i); 
