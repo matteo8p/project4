@@ -17,14 +17,12 @@ int global_i = 0;                                       //Global variable i
 
 int main()
 {
-    // mutex = (struct semaphore *)malloc(sizeof(struct semaphore)); 
     wrt = (struct semaphore *)malloc(sizeof(struct semaphore)); 
     rsem = (struct semaphore *)malloc(sizeof(struct semaphore)); 
     wsem = (struct semaphore *)malloc(sizeof(struct semaphore)); 
 
     runQ = (struct queue*)malloc(sizeof(struct queue)); 
 
-    // initSem(mutex, 1); 
     initSem(wrt, 1); 
     initSem(rsem, 0); 
     initSem(wsem, 1); 
@@ -54,32 +52,24 @@ int main()
 
 void reader(int id)
 {
-    for(int i = 0; i < 2; i++)
+    if(wwc > 0 || wc > 0)
     {
-        if(wwc > 0 || wc > 0)
-        {
-            rwc++; 
-            P(rsem);
-            rwc--; 
-        }
-        rc++; 
-
-        if(i == 0)
-        {
-            printf("\n This is the %d th reader reading value i = %d for the first time \n", id, global_i); 
-        }else
-        {
-            printf("\n This is the %d th reader reading value i = %d for the second time \n", id, global_i); 
-        }
-
-        rc--;
-        if(rc == 0 && wwc > 0)
-        {
-            V(wsem); 
-        }
-        yield();
+        rwc++; 
+        P(rsem);
+        rwc--; 
     }
+    rc++; 
 
+    printf("\n This is the %d th reader reading value i = %d for the first time \n", id, global_i); 
+    yield(); 
+    printf("\n This is the %d th reader reading value i = %d for the second time \n", id, global_i); 
+
+    rc--;
+    if(rc == 0 && wwc > 0)
+    {
+        V(wsem); 
+    }
+    
     TCB_t *tcb = delQueue(runQ); 
     if(runQ->headPointer == NULL) exit(0); 
     swapcontext(&(tcb->context), &(runQ->headPointer->context)); 
