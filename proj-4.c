@@ -85,9 +85,10 @@ void writer(int id)
     }
     wc++; 
     id = -id;                                                                //Convert negative id to positive id
+    global_i = id; 
 
     printf("\n This is the %d th writer writing value i = %d \n", id, id);
-    global_i = id; 
+    yield();
     printf("\n This is the %d th writer verifying value i = %d \n", id, global_i); 
 
     wc--; 
@@ -96,7 +97,6 @@ void writer(int id)
     {
         V(rsem); 
     }
-    yield();
 
     TCB_t *tcb = delQueue(runQ); 
     if(runQ->headPointer == NULL) exit(0); 
