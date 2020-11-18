@@ -17,15 +17,13 @@ int global_i = 0;                                       //Global variable i
 
 int main()
 {
-    wrt = (struct semaphore *)malloc(sizeof(struct semaphore)); 
     rsem = (struct semaphore *)malloc(sizeof(struct semaphore)); 
     wsem = (struct semaphore *)malloc(sizeof(struct semaphore)); 
 
     runQ = (struct queue*)malloc(sizeof(struct queue)); 
 
-    initSem(wrt, 1); 
     initSem(rsem, 0); 
-    initSem(wsem, 1); 
+    initSem(wsem, 0); 
 
     rwc = wwc = rc = wc = 0; 
 
